@@ -1,0 +1,9 @@
+main {
+    margin: 50px auto;
+    text-align: justify;
+    max-width: 800px;
+}
+
+main h1 {
+    text-align: center;
+}
