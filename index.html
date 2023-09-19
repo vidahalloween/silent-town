@@ -5,77 +5,140 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Halloween 2023</title>
-    <link rel="stylesheet" href="./style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎃</text></svg>">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
     <script src="./js/airtable.js"></script>
   </head>
   <body>
     <main>
-        <h1 id="title">Hello World!</h1>
-        <div class="animated-emoji">
-          🎃
-        </div>
+      <div class="title-container">
+        <img class="title-img" src="./img/title.png" />
+      </div>
 
-        <h2>Nombre del Personaje:</h2>
+      <div class="welcome-container">
+        <h1>Bienvenid@ a los casos de Silent Town</h1>
         <p>
+          El pueblo fantasma de Silent Town ha sido escenario de extrañas desgracias a lo largo de su historia. Si has
+          llegado hasta aquí es porque contamos con tu ayuda para desentramar los misteriosos casos de Silent Town.
+        </p>
+      </div>
+
+      <div class="loading">
+        <span id="one">🎃</span>
+        <span id="two">🎃</span>
+        <span id="three">🎃</span>
+      </div>
+      
+      <div class="incorrect-url-container">
+        <div class="animated-emoji">💀</div>
+        <p>
+          Parece que tu URL no es correcta. Contacta con los game masters
+        </p>
+      </div>
+
+      <div class="assignation-container">
+        <button>Empezar</button>
+      </div>
+    
+      <!-- <div class="animated-emoji">
+        🎃
+      </div> -->
+
+      <div class="form-container">
+        <h2>Nombre del Personaje:</h2>
+        <p class="field-hint">
           Puedes elegir nombres que suenen misteriosos, antiguos, o que tengan alguna relación con tu especialidad como
           "Madame Zara", "Doctor Mysticus", "Señorita Luna", "Profesor Enigma", etc.
         </p>
-
-        <h2>Historia de Fondo:</h2>
         <p>
+          <input type="text" />
+        </p>
+        <br />
+        
+        <h2>Historia de Fondo:</h2>
+        <p class="field-hint">
           Inventa una historia de fondo intrigante para tu personaje. Por ejemplo, puedes decir que vienes de una larga
           línea de videntes, o que tuviste una experiencia paranormal que despertó tus habilidades…
         </p>
-
-        <h2>Objetos o Atuendos Especiales:</h2>
         <p>
+          <textarea></textarea>
+        </p>
+        <br />
+        
+        <h2>Objetos o Atuendos Especiales:</h2>
+        <p class="field-hint">
           Cada personaje puede describir un objeto especial que siempre lleva consigo, como una bola de cristal, un
           péndulo, cartas del tarot, velas mágicas, etc. También puedes pensar en un atuendo que represente tu
           personaje, como una capa, un sombrero de copa, joyería esotérica, etc. Este apartado te ayudará a definir un
           poco mejor el vestuario de tu personaje. No te preocupes si aún no lo tienes tan claro o si después cambias
           alguna cosa.
         </p>
-
-        <h2>Personalidad y Actitud:</h2>
         <p>
+          <input type="text" />
+        </p>
+        <br />
+        
+        <h2>Personalidad y Actitud:</h2>
+        <p class="field-hint">
           Puedes definir la personalidad de tu personaje, como ser enigmático, sabio, excéntrico, misterioso o incluso
           escéptico. Este apartado te ayudará a definir un poco mejor tu personaje. No te preocupes si aún no lo tienes
           tan claro o si después cambias alguna cosa.
         </p>
-
-        <h2>Frases o Mantras:</h2>
         <p>
+          <textarea></textarea>
+        </p>
+        <br />
+        
+        <h2>Frases o Mantras:</h2>
+        <p class="field-hint">
           Cada personaje puede crear una frase o mantra místico que repiten a lo largo del juego. Por ejemplo, "Las
           estrellas guían mi camino" o "La verdad está en las cartas". Este apartado no es obligatorio pero le puede
           dar mucho juego si se te ocurre alguna.
         </p>
+        <p>
+          <input type="text" />
+        </p>
+        <br />
 
         <h2>Inspiración de Personajes Famosos:</h2>
-        <p>
+        <p class="field-hint">
           Puedes sugerirles que se inspiren en personajes de películas o series populares relacionados con lo
           paranormal. Por ejemplo, pueden tomar inspiración de personajes como la Profesora Trelawney de "Harry Potter",
           o John Constantine de la película "Constantine”. Si tu personaje es totalmente original y no se inspira en
           nadie, olvidate de este apartado.
         </p>
+        <p>
+          <input type="text" />
+        </p>
+        <br />
 
         <h2>Conexiones y Relaciones:</h2>
-        <p>
+        <p class="field-hint">
           Los jugadores pueden crear relaciones entre sus personajes, como ser amigos de toda la vida, rivales en el
           mundo de lo oculto o incluso tener secretos compartidos. Para definir este apartado, tendrás que ponerte en
           contacto con los jugadores que quieras crear el vínculo y pactarlo con ellos. Después vuelves a este apartado
           y lo especifícas.
         </p>
+        <p>
+          <textarea></textarea>
+        </p>
+        <br />
 
         <h2>Puntos Débiles:</h2>
-        <p>
+        <p class="field-hint">
           También puedes definir algún punto débil o superstición divertida para tu personaje, como temor a los gatos
           negros, la necesidad de tener un cristal protector, etc. Estas cosas también dan profundidad al personaje y le
           dan un punto de vidilla.
         </p>
+        <p>
+          <textarea></textarea>
+        </p>
+        <br />
+        <div class="buttons-container">
+          <button>Guardar y enviar</button>
+        </div>
+      </div>
     </main>
   <script src="./js/index.js"></script>
   </body>

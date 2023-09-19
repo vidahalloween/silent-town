@@ -1,13 +1,135 @@
+* {
+    color: #CCCCCC;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body {
+    background-image: url("./img/bg-min.png");
+}
+
 main {
     margin: 50px auto;
-    padding: 50px;
-    text-align: justify;
+    padding: 20px;
     max-width: 800px;
 }
 
 main h1 {
     text-align: center;
+    color: #FFFFFF;
 }
+
+.title-container {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.title-img {
+    max-width: 60%;
+}
+
+@media only screen and (max-width: 1200px) {
+    .title-img {
+        max-width: 80%;
+    }
+}
+
+.welcome-container {
+    margin-bottom: 20px;
+}
+
+.welcome-container p {
+    font-size: 0.9em;
+}
+
+.incorrect-url-container {
+    display: none;
+}
+
+.assignation-container {
+    display: none;
+}
+
+.form-container {
+    display: none;
+}
+
+.form-container h2 {
+    font-size: 1.2em;
+    color: #DDDDDD;
+}
+
+.form-container .field-hint {
+    font-size: 0.9em;
+    color: #888888;
+}
+
+.form-container input, textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.2em;
+    color: black;
+    background-color: #EEEEEE;
+}
+
+.form-container textarea {
+    height: 150px;
+}
+
+.buttons-container {
+    text-align: center;
+}
+
+button {
+    background-color: #f97806;
+    border-color: #333333;
+    color: #FFFFFF;
+    border-radius: 10px;
+    font-size: 1.2em;
+    padding: 10px;
+    min-width: 150px;
+}
+
+@keyframes loading-keyframes {
+    0% {
+        bottom: 0px;
+    }
+    25% {
+        bottom: 10px;
+    }
+    50% {
+        bottom: 0px;
+    }
+}
+
+.loading {
+    text-align: center;
+    padding: 50px;
+}
+
+.loading span {
+    font-size: 1.5em;
+    position: relative;
+    padding: 0px 5px;
+    animation-name: loading-keyframes;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+
+.loading #one {
+    animation-delay: 0s;
+}
+
+.loading #two {
+    animation-delay: 0.2s;
+}
+
+.loading #three {
+    animation-delay: 0.4s;
+}
+
+
+
 
 @keyframes emoji-keyframes {
     from {
@@ -22,7 +144,7 @@ main h1 {
 
 .animated-emoji {
     position: relative;
-    font-size: 15em;
+    font-size: 8em;
     text-align: center;
     bottom: 0px;
     opacity: 0%;
