@@ -1,9 +1,35 @@
 main {
     margin: 50px auto;
+    padding: 50px;
     text-align: justify;
     max-width: 800px;
 }
 
 main h1 {
     text-align: center;
+}
+
+@keyframes emoji-keyframes {
+    from {
+        bottom: 0px;
+        opacity: 0%;
+    }
+    to {
+        bottom: 25px;
+        opacity: 100%;
+    }
+}
+
+.animated-emoji {
+    position: relative;
+    font-size: 15em;
+    text-align: center;
+    bottom: 0px;
+    opacity: 0%;
+    animation-name: emoji-keyframes;
+    animation-delay: 1s;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
 }
