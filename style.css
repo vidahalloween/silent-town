@@ -5,6 +5,7 @@
 
 body {
     background-image: url("./img/bg-min.png");
+    background-repeat: repeat;
 }
 
 main {

@@ -1,4 +1,8 @@
 // Characters info
+const SPECIALTY_NAME_FIELD_ID = 'name';
+const SPECIALTY_EMOJI_FIELD_ID = 'emoji';
+const SPECIALTY_DESCRIPTION_FIELD_ID = 'description';
+
 const TAROTISTA = {
     name: "Tarotista",
     emoji: "🃏",
@@ -83,10 +87,17 @@ const API_KEY = 'pat5Kss9nRzjRDsFh.7d03cf7cd13c5d122d9e25ccf7dd4f5626bb6ebd5fbe3
 const BASE_ID = 'appY1pRlJul8YV1C5';
 const TABLE_NAME = 'characters';
 
+const FIELD_AIRTABLE_ID = 'id';
 const FIELD_CHARACTER_ID = 'character_id';
 const FIELD_SPECIALTY_ID = 'specialty';
 const FIELD_NAME_ID = 'name';
 const FIELD_BACKSTORY_ID = 'backstory';
+const FIELD_OBJECTS_ID = 'objects';
+const FIELD_PERSONALITY_ID = 'personality';
+const FIELD_QUOTES_ID = 'quotes';
+const FIELD_INSPIRATIONS_ID = 'inspirations';
+const FIELD_CONNECTIONS_ID = 'connections';
+const FIELD_WEAK_POINS_ID = 'weak_points';
 
 const Airtable = require('airtable');
 const base = new Airtable({ apiKey: API_KEY }).base(BASE_ID);
@@ -99,8 +110,9 @@ const USER_ID_PARAM_ID = 'id';
 
 // Start
 const userId = new URLSearchParams(window.location.search).get(USER_ID_PARAM_ID);
-const previouslyAssignedCharacters = 0;
+var previouslyAssignedCharacters = 0;
 var userData;
+var userUpdatedSuccessfully = false;
 
 if (!userId) {
     // No id - can't grant access
@@ -128,10 +140,10 @@ function fetchCharacterInfo(id) {
             showIncorrectUrlMessage();
         } else {
             console.log('User id ' + id + ' correctly fetched.');
+
+            userData = extractUserDataFromRecord(records[0]);
             
-            userData = records[0];
-            
-            if (!userData.get(FIELD_SPECIALTY_ID)) {
+            if (!userData[FIELD_SPECIALTY_ID]) {
                 console.log('No specialty detected yet. Showing assignation flow');
                 showAssignationFlow();
             } else {
@@ -140,38 +152,31 @@ function fetchCharacterInfo(id) {
                 showCharacterCreationFlow();
             }
         }
-        // console.log("Found records " + records.length)
-        // records.forEach(function(record) {
-        //     const id = record.get(FIELD_CHARACTER_ID);
-        //     console.log('Retrieved', id);
-        //     registeredCharacters[id] = record;
-        //     if (record.get(FIELD_SPECIALTY_ID)) {
-        //         registeredCharacters['num_of_specialists']++;
-        //     }
-        // });
-
-        // console.log("Done fetching: " + registeredCharacters);
-
-        // const characterInfo = registeredCharacters[userId];
-
-        // if (!characterInfo) {
-        //     console.log("Current ID not found on characters table")
-        //     showIncorrectUrlMessage();
-        // } else {
-        //     console.log("Character found with ID " + userId);
-        //     const specialty = characterInfo.get(FIELD_SPECIALTY_ID);
-
-        //     if (!specialty) {
-        //         console.log("No specialty yet! Assigning one");
-        //         getAssignedCharacter();
-        //     } else {
-        //         console.log("Character specialty identified: " + specialty);
-        //     }
-        // }
     })
     .catch(error => {
         console.error(error);
     });
+}
+
+function extractUserDataFromRecord(record) {
+    var data = {};
+    data[FIELD_AIRTABLE_ID] = record.getId();
+    data[FIELD_CHARACTER_ID] = record.get(FIELD_CHARACTER_ID);
+    data[FIELD_NAME_ID] = record.get(FIELD_NAME_ID);
+    data[FIELD_OBJECTS_ID] = record.get(FIELD_OBJECTS_ID);
+    data[FIELD_PERSONALITY_ID] = record.get(FIELD_PERSONALITY_ID);
+    data[FIELD_QUOTES_ID] = record.get(FIELD_QUOTES_ID);
+    data[FIELD_INSPIRATIONS_ID] = record.get(FIELD_INSPIRATIONS_ID);
+    data[FIELD_CONNECTIONS_ID] = record.get(FIELD_CONNECTIONS_ID);
+    data[FIELD_WEAK_POINS_ID] = record.get(FIELD_WEAK_POINS_ID);
+    data[FIELD_BACKSTORY_ID] = record.get(FIELD_BACKSTORY_ID);
+    ALL_SPECIALTIES.forEach(function(value, key) {
+        if (value[SPECIALTY_NAME_FIELD_ID] === record.get(FIELD_SPECIALTY_ID)) {
+            data[FIELD_SPECIALTY_ID] = value;
+        }
+    });
+
+    return data;
 }
 
 function showAssignationFlow() {
@@ -186,105 +191,21 @@ function showCharacterCreationFlow() {
 }
 
 function onAssignButtonClicked() {
-    console.log("On Assign Button Clicked");
     $('#assign-button').prop('disabled', true);
     $('#crystal-ball-emoji').removeClass('animated-emoji').addClass('crystal-ball-loading');
     assignSpecialty();
 }
 
 function assignSpecialty() {
+    previouslyAssignedCharacters = 0;
+
     base(TABLE_NAME).select({
         fields: [FIELD_SPECIALTY_ID],
         view: "Grid view"
     }).eachPage(function page(records, fetchNextPage) {
         records.forEach(function(record) {
-            record.get(FIELD_SPECIALTY_ID)
-
-            registeredCharacters[id] = record;
             if (record.get(FIELD_SPECIALTY_ID)) {
-                registeredCharacters['num_of_specialists']++;
-            }
-        });
-
-        fetchNextPage();
-    }, function done(err) {
-        // if (err) {
-        //     console.error(err); return;
-        // }
-
-        // console.log("Done fetching: " + registeredCharacters);
-
-        // const characterInfo = registeredCharacters[userId];
-
-        // if (!characterInfo) {
-        //     console.log("Current ID not found on characters table")
-        //     showIncorrectUrlMessage();
-        // } else {
-        //     console.log("Character found with ID " + userId);
-        //     const specialty = characterInfo.get(FIELD_SPECIALTY_ID);
-
-        //     if (!specialty) {
-        //         console.log("No specialty yet! Assigning one");
-        //         getAssignedCharacter();
-        //     } else {
-        //         console.log("Character specialty identified: " + specialty);
-        //     }
-        // }
-    });
-}
-
-function fetchAllCharacters() {
-    base(TABLE_NAME).select({
-        fields: [FIELD_NAME_ID, FIELD_SPECIALTY_ID],
-        view: "Grid view"
-    }).eachPage(function page(records, fetchNextPage) {
-        // records.forEach(function(record) {
-        //     const id = record.get(FIELD_CHARACTER_ID);
-        //     console.log('Retrieved', id);
-        //     registeredCharacters[id] = record;
-        //     if (record.get(FIELD_SPECIALTY_ID)) {
-        //         registeredCharacters['num_of_specialists']++;
-        //     }
-        // });
-
-        fetchNextPage();
-    }, function done(err) {
-        // if (err) {
-        //     console.error(err); return;
-        // }
-
-        // console.log("Done fetching: " + registeredCharacters);
-
-        // const characterInfo = registeredCharacters[userId];
-
-        // if (!characterInfo) {
-        //     console.log("Current ID not found on characters table")
-        //     showIncorrectUrlMessage();
-        // } else {
-        //     console.log("Character found with ID " + userId);
-        //     const specialty = characterInfo.get(FIELD_SPECIALTY_ID);
-
-        //     if (!specialty) {
-        //         console.log("No specialty yet! Assigning one");
-        //         getAssignedCharacter();
-        //     } else {
-        //         console.log("Character specialty identified: " + specialty);
-        //     }
-        // }
-    });
-}
-
-function fetchCharactersInfo() {
-    base(TABLE_NAME).select({
-        fields: [FIELD_NAME_ID, FIELD_SPECIALTY_ID],
-        view: "Grid view"
-    }).eachPage(function page(records, fetchNextPage) {
-        records.forEach(function(record) {
-            const id = record.get(FIELD_CHARACTER_ID);
-            console.log('Retrieved', id);
-            registeredCharacters[id] = record;
-            if (record.get(FIELD_SPECIALTY_ID)) {
-                registeredCharacters['num_of_specialists']++;
+                previouslyAssignedCharacters++;
             }
         });
 
@@ -294,44 +215,42 @@ function fetchCharactersInfo() {
             console.error(err); return;
         }
 
-        console.log("Done fetching: " + registeredCharacters);
+        const specialtyIdx = previouslyAssignedCharacters % ALL_SPECIALTIES.length;
+        userData[FIELD_SPECIALTY_ID] = ALL_SPECIALTIES[specialtyIdx];
 
-        const characterInfo = registeredCharacters[userId];
-
-        if (!characterInfo) {
-            console.log("Current ID not found on characters table")
-            showIncorrectUrlMessage();
-        } else {
-            console.log("Character found with ID " + userId);
-            const specialty = characterInfo.get(FIELD_SPECIALTY_ID);
-
-            if (!specialty) {
-                console.log("No specialty yet! Assigning one");
-                getAssignedCharacter();
-            } else {
-                console.log("Character specialty identified: " + specialty);
-            }
-        }
-
+        updateCharacter();
+        checkUserUpdatedSuccessfully(3000, showCharacterCreationFlow);
     });
 }
 
-function getAssignedCharacter() {
-    var charNum = registeredCharacters['num_of_specialists'] % ALL_SPECIALTIES.length;
-    console.log("You'd be getting main character num " + charNum + " for characters " + registeredCharacters['num_of_specialists']);
-    console.log("Updating your specialty to " + ALL_SPECIALTIES[charNum]['name']);
-    updateCharacter(registeredCharacters[userId].getId(), { "specialty": ALL_SPECIALTIES[charNum]['name']});
+function checkUserUpdatedSuccessfully(timeout, callback) {
+    if (userUpdatedSuccessfully) {
+        console.log("userUpdatedSuccessfully is true");
+        userUpdatedSuccessfully = false;
+        callback();
+        return;
+    }
+
+    console.log("userUpdatedSuccessfully is false");
+    setTimeout(function() { checkUserUpdatedSuccessfully(timeout, callback) }, timeout);
 }
 
 function updateCharacter(id, data) {
-    console.log("Updating id " + id);
+    var airtableData = {};
+    Object.assign(airtableData, userData);
+    airtableData[FIELD_SPECIALTY_ID] = userData[FIELD_SPECIALTY_ID][SPECIALTY_NAME_FIELD_ID];
+    delete airtableData[FIELD_AIRTABLE_ID];
+
+    console.log("Updating character with id " + id);
     base(TABLE_NAME).update([{
-        "id": id,
-        "fields": data
+        "id": userData[FIELD_AIRTABLE_ID],
+        "fields": airtableData
     }], function(err, records) {
         if (err) {
           console.error(err);
           return;
         }
+        console.log("Updated character with id " + id);
+        userUpdatedSuccessfully = true;
     });
 }
