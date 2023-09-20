@@ -38,7 +38,7 @@ const NUMEROLOGO = {
 
 const EXPERTO_PSICOFONIAS = {
     name: "Experto en psicofonías",
-    emoji: "🎤",
+    emoji: "🎧",
     description: "Las psicofonías son el registro de las voces que nos llegan desde el más allá. Mediante el estudio "
         + "de una voz deambulante, el alarido último que queda atrapado en el tiempo, o el mensaje ininteligible de "
         + "quien quiere comunicarse desde otro plano, los expertos en psicofonías nos ayudan a entender qué fue y cómo "
@@ -78,9 +78,15 @@ const CEROMANTE = {
 };
 
 const ALL_SPECIALTIES = [
-    TAROTISTA, MEDIUM, ASTROLOGO, NUMEROLOGO, EXPERTO_PSICOFONIAS, TASEOGRAFO, PAREIDOLOGO, QUIROMANTE, CEROMANTE
+    TAROTISTA, MEDIUM, ASTROLOGO, NUMEROLOGO, EXPERTO_PSICOFONIAS,
+    TASEOGRAFO,
+    TAROTISTA, MEDIUM, ASTROLOGO, NUMEROLOGO, EXPERTO_PSICOFONIAS,
+    PAREIDOLOGO,
+    TAROTISTA, MEDIUM, ASTROLOGO, NUMEROLOGO, EXPERTO_PSICOFONIAS,
+    QUIROMANTE,
+    TAROTISTA, MEDIUM, ASTROLOGO, NUMEROLOGO, EXPERTO_PSICOFONIAS,
+    CEROMANTE
 ];
-
 
 // Airtable config
 const API_KEY = 'pat5Kss9nRzjRDsFh.7d03cf7cd13c5d122d9e25ccf7dd4f5626bb6ebd5fbe307811de5736e4ad473b';
@@ -104,6 +110,7 @@ const base = new Airtable({ apiKey: API_KEY }).base(BASE_ID);
 
 // In memory data
 var registeredCharacters = [];
+var updateCharacterTimeout;
 
 // Constants
 const USER_ID_PARAM_ID = 'id';
@@ -124,8 +131,8 @@ if (!userId) {
 }
 
 function showIncorrectUrlMessage() {
-    $('.welcome-loading').css('display', 'none');
-    $('.incorrect-url-container').css('display', 'block');
+    $('.welcome-loading').hide();
+    $('.incorrect-url-container').show();
 }
 
 function fetchCharacterInfo(id) {
@@ -148,13 +155,13 @@ function fetchCharacterInfo(id) {
                 showAssignationFlow();
             } else {
                 console.log('Specialty detected. Showing char creation flow');
-                // Show char creation flow and restoring data
                 showCharacterCreationFlow();
             }
         }
     })
     .catch(error => {
         console.error(error);
+        showErrorBanner();
     });
 }
 
@@ -180,15 +187,15 @@ function extractUserDataFromRecord(record) {
 }
 
 function showAssignationFlow() {
-    $('.welcome-loading').css('display', 'none');
+    $('.welcome-loading').hide();
     $('.assignation-container').fadeIn(500);
 }
 
 function showCharacterCreationFlow() {
     populateCharacterCreationForm();
 
-    $('.welcome-loading').css('display', 'none');
-    $('.assignation-container').css('display', 'none');
+    $('.welcome-loading').hide();
+    $('.assignation-container').hide();
     $('.form-container').fadeIn();
 }
 
@@ -219,8 +226,9 @@ function updateUserDataFromFormFields() {
 }
 
 function onAssignButtonClicked() {
-    $('#assign-button').prop('disabled', true);
+    $('#assign-button').attr('disabled', true).fadeOut(500)
     $('#crystal-ball-emoji').removeClass('animated-emoji').addClass('crystal-ball-loading');
+    $('#crystal-ball-bg').addClass('crystal-ball-bg-loading');
     assignSpecialty();
 }
 
@@ -240,38 +248,41 @@ function assignSpecialty() {
         fetchNextPage();
     }, function done(err) {
         if (err) {
-            console.error(err); return;
+            console.error(err);
+            showErrorBanner();
+            return;
         }
+
+        console.info()
 
         const specialtyIdx = previouslyAssignedCharacters % ALL_SPECIALTIES.length;
         userData[FIELD_SPECIALTY_ID] = ALL_SPECIALTIES[specialtyIdx];
 
         updateCharacter();
-        checkUserUpdatedSuccessfully(3000, showCharacterCreationFlow);
+        checkUserUpdatedSuccessfully(5000, showCharacterCreationFlow);
     });
 }
 
-function onSaveButtonClicked() {
-    $('#save-button').prop('disabled', true);
-    updateUserDataFromFormFields();
-    updateCharacter();
-    checkUserUpdatedSuccessfully(1000, showCharacterUpdatedSuccessfully);
+function onInputValueChanged() {
+    if (updateCharacterTimeout) {
+        clearTimeout(updateCharacterTimeout);
+    }
+
+    updateCharacterTimeout = setTimeout(saveCharacterData, 1000);
 }
 
-function showCharacterUpdatedSuccessfully() {
-    $('#save-button').prop('disabled', false);
-    console.log("Character updated");
+function saveCharacterData() {
+    updateUserDataFromFormFields();
+    updateCharacter();
 }
 
 function checkUserUpdatedSuccessfully(timeout, callback) {
     if (userUpdatedSuccessfully) {
-        console.log("userUpdatedSuccessfully is true");
         userUpdatedSuccessfully = false;
         callback();
         return;
     }
 
-    console.log("userUpdatedSuccessfully is false");
     setTimeout(function() { checkUserUpdatedSuccessfully(timeout, callback) }, timeout);
 }
 
@@ -288,9 +299,14 @@ function updateCharacter() {
     }], function(err, records) {
         if (err) {
           console.error(err);
+          showErrorBanner();
           return;
         }
 
         userUpdatedSuccessfully = true;
     });
+}
+
+function showErrorBanner() {
+    $('.error-banner').show();
 }

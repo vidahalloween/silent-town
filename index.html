@@ -11,6 +11,10 @@
     <script src="./js/airtable.js"></script>
   </head>
   <body>
+    <div class="error-banner">
+      ❌ Ha ocurrido un error. Por favor, recarga la página y vuelve a intentarlo. Si el problema persiste, contacta
+      con los game master.
+    </div>
     <main>
       <div class="title-container">
         <img class="title-img" src="./img/title.png" />
@@ -33,18 +37,17 @@
         <div style="font-size:6em">🚫</div>
         <p>
           Para acceder a los archivos de Silent Town debes usar tu dirección personal. Si tienes cualquier problema,
-          contactar con los game masters.
+          contacta con los game masters.
         </p>
       </div>
 
       <div class="assignation-container">
         <p>
-          Antes de unirte al grupo de investigación, necesitarás saber cuál es tu especialidad en parapsicología. Para
-          ello, pulsa el botón bajo la bola de cristal. Pero cuidado, cuándo lo pulses puede afectar a tu destino y, una
-          vez hecho, no habrá vuelta atrás. ¿Estás preparad@?
+          Para unirte al grupo de investigación, primero necesitarás saber cuál es tu especialidad en parapsicología.
+          Cuándo lo pulses afectará a tu destino y al de los demás y no habrá vuelta atrás. Procede con cautela.
         </p>
         <div class="assignation-ritual-container">
-          <img src="./img/magic.gif" />
+          <img id="crystal-ball-bg" src="./img/magic.gif" />
           <div id="crystal-ball-emoji" class="animated-emoji big-emoji crystal-ball-loading">
             🔮
           </div>
@@ -54,7 +57,7 @@
       </div>
 
       <div class="form-container">
-        <h2>Tu especialidad de parapsicólogo es...</h2>
+        <h2 style="text-align: center;">Tu especialidad de parapsicólogo es...</h2>
         <div class="specialty-container">
           <div class="specialty-title-container">
             <span id="specialty-emoji" class="big-emoji animated-specialty-emoji"></span>
@@ -62,14 +65,14 @@
           </div>
           <span id="specialty-description"></span>
         </div>
-
+        
         <h2>Nombre del Personaje:</h2>
         <p class="field-hint">
           Puedes elegir nombres que suenen misteriosos, antiguos, o que tengan alguna relación con tu especialidad como
           "Madame Zara", "Doctor Mysticus", "Señorita Luna", "Profesor Enigma", etc.
         </p>
         <p>
-          <input id="form-name-field" type="text" />
+          <input id="form-name-field" type="text" onkeyup="onInputValueChanged()" onfocusout="saveCharacterData()" />
         </p>
         <br />
         
@@ -79,7 +82,7 @@
           línea de videntes, o que tuviste una experiencia paranormal que despertó tus habilidades…
         </p>
         <p>
-          <textarea id="form-backstory-field"></textarea>
+          <textarea id="form-backstory-field" onkeyup="onInputValueChanged()" onfocusout="saveCharacterData()"></textarea>
         </p>
         <br />
         
@@ -92,7 +95,7 @@
           alguna cosa.
         </p>
         <p>
-          <input id="form-objects-field" type="text" />
+          <input id="form-objects-field" type="text" onkeyup="onInputValueChanged()" onfocusout="saveCharacterData()" />
         </p>
         <br />
         
@@ -103,7 +106,7 @@
           tan claro o si después cambias alguna cosa.
         </p>
         <p>
-          <textarea id="form-personality-field"></textarea>
+          <textarea id="form-personality-field" onkeyup="onInputValueChanged()" onfocusout="saveCharacterData()"></textarea>
         </p>
         <br />
         
@@ -114,7 +117,7 @@
           dar mucho juego si se te ocurre alguna.
         </p>
         <p>
-          <input id="form-quotes-field" type="text" />
+          <input id="form-quotes-field" type="text" onkeyup="onInputValueChanged()" onfocusout="saveCharacterData()" />
         </p>
         <br />
 
@@ -126,7 +129,7 @@
           nadie, olvidate de este apartado.
         </p>
         <p>
-          <input id="form-inspirations-field" type="text" />
+          <input id="form-inspirations-field" type="text" onkeyup="onInputValueChanged()" onfocusout="saveCharacterData()" />
         </p>
         <br />
 
@@ -138,7 +141,7 @@
           y lo especifícas.
         </p>
         <p>
-          <textarea id="form-connections-field"></textarea>
+          <textarea id="form-connections-field" onkeyup="onInputValueChanged()" onfocusout="saveCharacterData()"></textarea>
         </p>
         <br />
 
@@ -149,12 +152,8 @@
           dan un punto de vidilla.
         </p>
         <p>
-          <textarea id="form-weak_points-field"></textarea>
+          <textarea id="form-weak_points-field" onkeyup="onInputValueChanged()" onfocusout="saveCharacterData()"></textarea>
         </p>
-        <br />
-        <div id="save-button" class="buttons-container">
-          <button id="save-button" onclick="onSaveButtonClicked()">Guardar personaje</button>
-        </div>
       </div>
     </main>
   <script src="./js/index.js"></script>
