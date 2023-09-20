@@ -95,23 +95,20 @@ const base = new Airtable({ apiKey: API_KEY }).base(BASE_ID);
 var registeredCharacters = [];
 
 // Constants
-const QUERY_PARAM_ID = 'id';
+const USER_ID_PARAM_ID = 'id';
 
 // Start
-const queryId = new URLSearchParams(window.location.search).get(QUERY_PARAM_ID);
+const userId = new URLSearchParams(window.location.search).get(USER_ID_PARAM_ID);
+const previouslyAssignedCharacters = 0;
+var userData;
 
-if (!queryId) {
+if (!userId) {
     // No id - can't grant access
-    console.log("No se ha detectado id")
+    console.log("No id detected. Showing incorrect URL message");
     showIncorrectUrlMessage();
 } else {
     registeredCharacters['num_of_specialists'] = 0;
-    fetchCharactersInfo();
-}
-
-function onAssignButtonClicked() {
-    console.log("On Assign Button Clicked");
-    $('#crystal-ball-emoji').removeClass('animated-emoji').addClass('crystal-ball-loading');
+    fetchCharacterInfo(userId);
 }
 
 function showIncorrectUrlMessage() {
@@ -119,8 +116,167 @@ function showIncorrectUrlMessage() {
     $('.incorrect-url-container').css('display', 'block');
 }
 
+function fetchCharacterInfo(id) {
+    base(TABLE_NAME).select({
+        filterByFormula: "{character_id} = '" + id + "'",
+        view: "Grid view"
+    })
+    .firstPage()
+    .then(records => {
+        if (records.length < 1) {
+            console.warn('User id ' + id + ' not registered. Showing incorrect URL message');
+            showIncorrectUrlMessage();
+        } else {
+            console.log('User id ' + id + ' correctly fetched.');
+            
+            userData = records[0];
+            
+            if (!userData.get(FIELD_SPECIALTY_ID)) {
+                console.log('No specialty detected yet. Showing assignation flow');
+                showAssignationFlow();
+            } else {
+                console.log('Specialty detected. Showing char creation flow');
+                // Show char creation flow and restoring data
+                showCharacterCreationFlow();
+            }
+        }
+        // console.log("Found records " + records.length)
+        // records.forEach(function(record) {
+        //     const id = record.get(FIELD_CHARACTER_ID);
+        //     console.log('Retrieved', id);
+        //     registeredCharacters[id] = record;
+        //     if (record.get(FIELD_SPECIALTY_ID)) {
+        //         registeredCharacters['num_of_specialists']++;
+        //     }
+        // });
+
+        // console.log("Done fetching: " + registeredCharacters);
+
+        // const characterInfo = registeredCharacters[userId];
+
+        // if (!characterInfo) {
+        //     console.log("Current ID not found on characters table")
+        //     showIncorrectUrlMessage();
+        // } else {
+        //     console.log("Character found with ID " + userId);
+        //     const specialty = characterInfo.get(FIELD_SPECIALTY_ID);
+
+        //     if (!specialty) {
+        //         console.log("No specialty yet! Assigning one");
+        //         getAssignedCharacter();
+        //     } else {
+        //         console.log("Character specialty identified: " + specialty);
+        //     }
+        // }
+    })
+    .catch(error => {
+        console.error(error);
+    });
+}
+
+function showAssignationFlow() {
+    $('.welcome-loading').css('display', 'none');
+    $('.assignation-container').fadeIn(500);
+}
+
+function showCharacterCreationFlow() {
+    $('.welcome-loading').css('display', 'none');
+    $('.assignation-container').css('display', 'none');
+    $('.form-container').fadeIn();
+}
+
+function onAssignButtonClicked() {
+    console.log("On Assign Button Clicked");
+    $('#assign-button').prop('disabled', true);
+    $('#crystal-ball-emoji').removeClass('animated-emoji').addClass('crystal-ball-loading');
+    assignSpecialty();
+}
+
+function assignSpecialty() {
+    base(TABLE_NAME).select({
+        fields: [FIELD_SPECIALTY_ID],
+        view: "Grid view"
+    }).eachPage(function page(records, fetchNextPage) {
+        records.forEach(function(record) {
+            record.get(FIELD_SPECIALTY_ID)
+
+            registeredCharacters[id] = record;
+            if (record.get(FIELD_SPECIALTY_ID)) {
+                registeredCharacters['num_of_specialists']++;
+            }
+        });
+
+        fetchNextPage();
+    }, function done(err) {
+        // if (err) {
+        //     console.error(err); return;
+        // }
+
+        // console.log("Done fetching: " + registeredCharacters);
+
+        // const characterInfo = registeredCharacters[userId];
+
+        // if (!characterInfo) {
+        //     console.log("Current ID not found on characters table")
+        //     showIncorrectUrlMessage();
+        // } else {
+        //     console.log("Character found with ID " + userId);
+        //     const specialty = characterInfo.get(FIELD_SPECIALTY_ID);
+
+        //     if (!specialty) {
+        //         console.log("No specialty yet! Assigning one");
+        //         getAssignedCharacter();
+        //     } else {
+        //         console.log("Character specialty identified: " + specialty);
+        //     }
+        // }
+    });
+}
+
+function fetchAllCharacters() {
+    base(TABLE_NAME).select({
+        fields: [FIELD_NAME_ID, FIELD_SPECIALTY_ID],
+        view: "Grid view"
+    }).eachPage(function page(records, fetchNextPage) {
+        // records.forEach(function(record) {
+        //     const id = record.get(FIELD_CHARACTER_ID);
+        //     console.log('Retrieved', id);
+        //     registeredCharacters[id] = record;
+        //     if (record.get(FIELD_SPECIALTY_ID)) {
+        //         registeredCharacters['num_of_specialists']++;
+        //     }
+        // });
+
+        fetchNextPage();
+    }, function done(err) {
+        // if (err) {
+        //     console.error(err); return;
+        // }
+
+        // console.log("Done fetching: " + registeredCharacters);
+
+        // const characterInfo = registeredCharacters[userId];
+
+        // if (!characterInfo) {
+        //     console.log("Current ID not found on characters table")
+        //     showIncorrectUrlMessage();
+        // } else {
+        //     console.log("Character found with ID " + userId);
+        //     const specialty = characterInfo.get(FIELD_SPECIALTY_ID);
+
+        //     if (!specialty) {
+        //         console.log("No specialty yet! Assigning one");
+        //         getAssignedCharacter();
+        //     } else {
+        //         console.log("Character specialty identified: " + specialty);
+        //     }
+        // }
+    });
+}
+
 function fetchCharactersInfo() {
     base(TABLE_NAME).select({
+        fields: [FIELD_NAME_ID, FIELD_SPECIALTY_ID],
         view: "Grid view"
     }).eachPage(function page(records, fetchNextPage) {
         records.forEach(function(record) {
@@ -140,13 +296,13 @@ function fetchCharactersInfo() {
 
         console.log("Done fetching: " + registeredCharacters);
 
-        const characterInfo = registeredCharacters[queryId];
+        const characterInfo = registeredCharacters[userId];
 
         if (!characterInfo) {
             console.log("Current ID not found on characters table")
             showIncorrectUrlMessage();
         } else {
-            console.log("Character found with ID " + queryId);
+            console.log("Character found with ID " + userId);
             const specialty = characterInfo.get(FIELD_SPECIALTY_ID);
 
             if (!specialty) {
@@ -164,7 +320,7 @@ function getAssignedCharacter() {
     var charNum = registeredCharacters['num_of_specialists'] % ALL_SPECIALTIES.length;
     console.log("You'd be getting main character num " + charNum + " for characters " + registeredCharacters['num_of_specialists']);
     console.log("Updating your specialty to " + ALL_SPECIALTIES[charNum]['name']);
-    updateCharacter(registeredCharacters[queryId].getId(), { "specialty": ALL_SPECIALTIES[charNum]['name']});
+    updateCharacter(registeredCharacters[userId].getId(), { "specialty": ALL_SPECIALTIES[charNum]['name']});
 }
 
 function updateCharacter(id, data) {
