@@ -84,14 +84,34 @@ main h1 {
     text-align: center;
 }
 
-.specialty-container p {
-    font-size: 0.8em;
+.specialty-title-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
 }
 
-.specialty-container #specialty-emoji {
-    position: relative;
-    opacity: 0%;
-    bottom: 0px;
+#specialty-name {
+    position: absolute;
+    font-size: 2.5em;
+    font-weight: bold;
+    letter-spacing: 10px;
+    color: #FFFFFF;
+    text-shadow: #333333 1px 0 10px;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#specialty-emoji {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#specialty-description {
+    font-style: italic;
+    font-size: 0.8em;
 }
 
 .form-container h2 {
@@ -204,12 +224,32 @@ button {
 
 .animated-emoji {
     animation-name: emoji-keyframes;
-    animation-delay: 1s;
     animation-duration: 2s;
     animation-iteration-count: 1;
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
 }
+
+@keyframes specialty-emoji-keyframes {
+    from {
+        transform: translate(-50%, 0%);
+        opacity: 0%;
+    }
+    to {
+        transform: translate(-50%, -20%);
+        opacity: 100%;
+    }
+}
+
+.animated-specialty-emoji {
+    animation-name: specialty-emoji-keyframes;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+
 
 .big-emoji {
     font-size: 8em;

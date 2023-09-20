@@ -195,7 +195,7 @@ function showCharacterCreationFlow() {
 function populateCharacterCreationForm() {
     $('#specialty-name').html(userData[FIELD_SPECIALTY_ID][SPECIALTY_NAME_FIELD_ID]);
     $('#specialty-emoji').html(userData[FIELD_SPECIALTY_ID][SPECIALTY_EMOJI_FIELD_ID]);
-    // $('#specialty-description').html(userData[FIELD_SPECIALTY_ID][SPECIALTY_DESCRIPTION_FIELD_ID]);
+    $('#specialty-description').html('"' + userData[FIELD_SPECIALTY_ID][SPECIALTY_DESCRIPTION_FIELD_ID] + '"');
     
     $('#form-name-field').val(userData[FIELD_NAME_ID]);
     $('#form-backstory-field').val(userData[FIELD_BACKSTORY_ID]);
@@ -290,7 +290,7 @@ function updateCharacter() {
           console.error(err);
           return;
         }
-        
+
         userUpdatedSuccessfully = true;
     });
 }
