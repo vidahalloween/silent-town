@@ -163,13 +163,13 @@ function extractUserDataFromRecord(record) {
     data[FIELD_AIRTABLE_ID] = record.getId();
     data[FIELD_CHARACTER_ID] = record.get(FIELD_CHARACTER_ID);
     data[FIELD_NAME_ID] = record.get(FIELD_NAME_ID);
+    data[FIELD_BACKSTORY_ID] = record.get(FIELD_BACKSTORY_ID);
     data[FIELD_OBJECTS_ID] = record.get(FIELD_OBJECTS_ID);
     data[FIELD_PERSONALITY_ID] = record.get(FIELD_PERSONALITY_ID);
     data[FIELD_QUOTES_ID] = record.get(FIELD_QUOTES_ID);
     data[FIELD_INSPIRATIONS_ID] = record.get(FIELD_INSPIRATIONS_ID);
     data[FIELD_CONNECTIONS_ID] = record.get(FIELD_CONNECTIONS_ID);
     data[FIELD_WEAK_POINS_ID] = record.get(FIELD_WEAK_POINS_ID);
-    data[FIELD_BACKSTORY_ID] = record.get(FIELD_BACKSTORY_ID);
     ALL_SPECIALTIES.forEach(function(value, key) {
         if (value[SPECIALTY_NAME_FIELD_ID] === record.get(FIELD_SPECIALTY_ID)) {
             data[FIELD_SPECIALTY_ID] = value;
@@ -185,9 +185,37 @@ function showAssignationFlow() {
 }
 
 function showCharacterCreationFlow() {
+    populateCharacterCreationForm();
+
     $('.welcome-loading').css('display', 'none');
     $('.assignation-container').css('display', 'none');
     $('.form-container').fadeIn();
+}
+
+function populateCharacterCreationForm() {
+    $('#specialty-name').html(userData[FIELD_SPECIALTY_ID][SPECIALTY_NAME_FIELD_ID]);
+    $('#specialty-emoji').html(userData[FIELD_SPECIALTY_ID][SPECIALTY_EMOJI_FIELD_ID]);
+    // $('#specialty-description').html(userData[FIELD_SPECIALTY_ID][SPECIALTY_DESCRIPTION_FIELD_ID]);
+    
+    $('#form-name-field').val(userData[FIELD_NAME_ID]);
+    $('#form-backstory-field').val(userData[FIELD_BACKSTORY_ID]);
+    $('#form-objects-field').val(userData[FIELD_OBJECTS_ID]);
+    $('#form-personality-field').val(userData[FIELD_PERSONALITY_ID]);
+    $('#form-quotes-field').val(userData[FIELD_QUOTES_ID]);
+    $('#form-inspirations-field').val(userData[FIELD_INSPIRATIONS_ID]);
+    $('#form-connections-field').val(userData[FIELD_CONNECTIONS_ID]);
+    $('#form-weak_points-field').val(userData[FIELD_WEAK_POINS_ID]);
+}
+
+function updateUserDataFromFormFields() {
+    userData[FIELD_NAME_ID] = $('#form-name-field').val();
+    userData[FIELD_BACKSTORY_ID] = $('#form-backstory-field').val();
+    userData[FIELD_OBJECTS_ID] = $('#form-objects-field').val();
+    userData[FIELD_PERSONALITY_ID] = $('#form-personality-field').val();
+    userData[FIELD_QUOTES_ID] = $('#form-quotes-field').val();
+    userData[FIELD_INSPIRATIONS_ID] = $('#form-inspirations-field').val();
+    userData[FIELD_CONNECTIONS_ID] = $('#form-connections-field').val();
+    userData[FIELD_WEAK_POINS_ID] = $('#form-weak_points-field').val();
 }
 
 function onAssignButtonClicked() {
@@ -223,6 +251,18 @@ function assignSpecialty() {
     });
 }
 
+function onSaveButtonClicked() {
+    $('#save-button').prop('disabled', true);
+    updateUserDataFromFormFields();
+    updateCharacter();
+    checkUserUpdatedSuccessfully(1000, showCharacterUpdatedSuccessfully);
+}
+
+function showCharacterUpdatedSuccessfully() {
+    $('#save-button').prop('disabled', false);
+    console.log("Character updated");
+}
+
 function checkUserUpdatedSuccessfully(timeout, callback) {
     if (userUpdatedSuccessfully) {
         console.log("userUpdatedSuccessfully is true");
@@ -235,13 +275,13 @@ function checkUserUpdatedSuccessfully(timeout, callback) {
     setTimeout(function() { checkUserUpdatedSuccessfully(timeout, callback) }, timeout);
 }
 
-function updateCharacter(id, data) {
+function updateCharacter() {
     var airtableData = {};
     Object.assign(airtableData, userData);
     airtableData[FIELD_SPECIALTY_ID] = userData[FIELD_SPECIALTY_ID][SPECIALTY_NAME_FIELD_ID];
     delete airtableData[FIELD_AIRTABLE_ID];
 
-    console.log("Updating character with id " + id);
+    console.log("Updating character with id " + userData[FIELD_AIRTABLE_ID]);
     base(TABLE_NAME).update([{
         "id": userData[FIELD_AIRTABLE_ID],
         "fields": airtableData
@@ -250,7 +290,7 @@ function updateCharacter(id, data) {
           console.error(err);
           return;
         }
-        console.log("Updated character with id " + id);
+        
         userUpdatedSuccessfully = true;
     });
 }

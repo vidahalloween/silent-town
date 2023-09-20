@@ -68,10 +68,6 @@ main h1 {
     /* display: none; */
 }
 
-#ritual-background {
-    background-color: purple;
-}
-
 #crystal-ball-emoji {
     position: absolute;
     opacity: 0%;
@@ -82,6 +78,20 @@ main h1 {
 
 .form-container {
     display: none;
+}
+
+.specialty-container {
+    text-align: center;
+}
+
+.specialty-container p {
+    font-size: 0.8em;
+}
+
+.specialty-container #specialty-emoji {
+    position: relative;
+    opacity: 0%;
+    bottom: 0px;
 }
 
 .form-container h2 {
@@ -97,7 +107,7 @@ main h1 {
 .form-container input, textarea {
     width: 100%;
     padding: 10px;
-    font-size: 1.2em;
+    font-size: 1em;
     color: black;
     background-color: #EEEEEE;
 }
