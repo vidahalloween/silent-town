@@ -103,8 +103,20 @@ const queryId = new URLSearchParams(window.location.search).get(QUERY_PARAM_ID);
 if (!queryId) {
     // No id - can't grant access
     console.log("No se ha detectado id")
+    showIncorrectUrlMessage();
 } else {
+    registeredCharacters['num_of_specialists'] = 0;
     fetchCharactersInfo();
+}
+
+function onAssignButtonClicked() {
+    console.log("On Assign Button Clicked");
+    $('#crystal-ball-emoji').removeClass('animated-emoji').addClass('crystal-ball-loading');
+}
+
+function showIncorrectUrlMessage() {
+    $('.welcome-loading').css('display', 'none');
+    $('.incorrect-url-container').css('display', 'block');
 }
 
 function fetchCharactersInfo() {
@@ -115,7 +127,9 @@ function fetchCharactersInfo() {
             const id = record.get(FIELD_CHARACTER_ID);
             console.log('Retrieved', id);
             registeredCharacters[id] = record;
-            registeredCharacters['length']++;
+            if (record.get(FIELD_SPECIALTY_ID)) {
+                registeredCharacters['num_of_specialists']++;
+            }
         });
 
         fetchNextPage();
@@ -130,6 +144,7 @@ function fetchCharactersInfo() {
 
         if (!characterInfo) {
             console.log("Current ID not found on characters table")
+            showIncorrectUrlMessage();
         } else {
             console.log("Character found with ID " + queryId);
             const specialty = characterInfo.get(FIELD_SPECIALTY_ID);
@@ -146,8 +161,8 @@ function fetchCharactersInfo() {
 }
 
 function getAssignedCharacter() {
-    var charNum = registeredCharacters['length'] % ALL_SPECIALTIES.length;
-    console.log("You'd be getting main character num " + charNum + " for characters " + registeredCharacters['length']);
+    var charNum = registeredCharacters['num_of_specialists'] % ALL_SPECIALTIES.length;
+    console.log("You'd be getting main character num " + charNum + " for characters " + registeredCharacters['num_of_specialists']);
     console.log("Updating your specialty to " + ALL_SPECIALTIES[charNum]['name']);
     updateCharacter(registeredCharacters[queryId].getId(), { "specialty": ALL_SPECIALTIES[charNum]['name']});
 }
