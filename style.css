@@ -18,7 +18,6 @@ body {
     text-align: center;
     color: #C12323;
     background-color: #ff8787;
-    border: #C12323 2px;
     top: 0px;
     left: 0px;
 }
@@ -28,9 +27,9 @@ body {
     grid-template-columns: auto 1fr;
     width: 100%;
     gap: 5px;
-    padding: 5px;
+    padding: 10px 5px;
     background-color: #cbdbe9;
-    border: #4c7192 2px;
+    border: solid #4c7192;
 }
 
 .info-banner .banner-icon {
@@ -43,10 +42,6 @@ body {
 }
 
 .info-banner .banner-message {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     color: #4c7192;
     font-size: 0.8em;
 }
@@ -85,6 +80,7 @@ main h1 {
 
 .incorrect-url-container p {
     color: #C12323;
+    font-size: 0.9em;
 }
 
 .welcome-container {
@@ -94,6 +90,7 @@ main h1 {
 
 .welcome-container p {
     font-size: 0.8em;
+    text-align: justify;
 }
 
 .assignation-container {
@@ -103,6 +100,7 @@ main h1 {
 
 .assignation-container p {
     font-size: 0.8em;
+    text-align: justify;
 }
 
 .assignation-ritual-container {
@@ -146,7 +144,7 @@ main h1 {
     width: 100%;
     font-size: 2.5em;
     font-weight: bold;
-    letter-spacing: 10px;
+    letter-spacing: 8px;
     color: #FFFFFF;
     text-shadow: #7200ff 0px 0px 15px;
     top: 80%;

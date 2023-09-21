@@ -37,7 +37,7 @@ const NUMEROLOGO = {
 };
 
 const EXPERTO_PSICOFONIAS = {
-    name: "Experto en psicofonías",
+    name: "Psicofonista",
     emoji: "🎧",
     description: "Las psicofonías son el registro de las voces que nos llegan desde el más allá. Mediante el estudio "
         + "de una voz deambulante, el alarido último que queda atrapado en el tiempo, o el mensaje ininteligible de "
@@ -56,7 +56,7 @@ const TASEOGRAFO = {
 const PAREIDOLOGO = {
     name: "Pareidólogo",
     emoji: "😶‍🌫️",
-    description: "Los pareidólogos son expertos en encontrar formas allá donde otros no ven nada. Estas formas "
+    description: "Los pareidólogos son expertos en encontrar caras y formas allá donde otros no ven nada. Estas formas "
         + "místicas esconden historias grotescas impresas en manchas y borrones, imperceptibles para la mayoría pero "
         + "no para los ojos expertos de los pareidólogos."
 };
