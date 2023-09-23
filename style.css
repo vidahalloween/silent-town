@@ -30,6 +30,7 @@ body {
     padding: 10px 5px;
     background-color: #cbdbe9;
     border: solid #4c7192;
+    border-radius: 5px;
 }
 
 .info-banner .banner-icon {
