@@ -38,7 +38,7 @@ const NUMEROLOGO = {
 
 const EXPERTO_PSICOFONIAS = {
     name: "Psicofonista",
-    emoji: "🎧",
+    emoji: "🔊",
     description: "Las psicofonías son el registro de las voces que nos llegan desde el más allá. Mediante el estudio "
         + "de una voz deambulante, el alarido último que queda atrapado en el tiempo, o el mensaje ininteligible de "
         + "quien quiere comunicarse desde otro plano, los expertos en psicofonías nos ayudan a entender qué fue y cómo "
@@ -259,7 +259,7 @@ function assignSpecialty() {
         userData[FIELD_SPECIALTY_ID] = ALL_SPECIALTIES[specialtyIdx];
 
         updateCharacter();
-        checkUserUpdatedSuccessfully(5000, showCharacterCreationFlow);
+        checkUserUpdatedSuccessfully(6000, showCharacterCreationFlow);
     });
 }
 

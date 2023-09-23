@@ -123,7 +123,7 @@ main h1 {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -70px);
+    transform: translate(-70px, -60px);
 }
 
 .form-container {
@@ -132,12 +132,13 @@ main h1 {
 
 .specialty-container {
     text-align: center;
-    margin-bottom: 20px;
+    margin: 30px 0px;
 }
 
 .specialty-title-container {
     position: relative;
-    height: 200px;
+    margin: 15px 0px;
+    height: 140px;
 }
 
 #specialty-name {
@@ -155,9 +156,6 @@ main h1 {
 
 #specialty-emoji {
     position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 #specialty-description {
@@ -265,7 +263,6 @@ button:hover {
     animation-timing-function: ease-in-out;
 }
 
-
 @keyframes crystal-ball-bg-fadein-keyframes {
     0% {
         opacity: 0%;
@@ -277,22 +274,20 @@ button:hover {
 
 .crystal-ball-bg-loading {
     animation-name: crystal-ball-bg-fadein-keyframes;
-    animation-delay: 2s;
+    animation-delay: 1s;
     animation-duration: 4s;
     animation-iteration-count: 1;
     animation-timing-function: ease-in;
     animation-fill-mode: forwards;
 }
 
-
-
 @keyframes emoji-keyframes {
     from {
-        transform: translate(-50%, -20%);
+        transform: translate(-70px, 0%);
         opacity: 0%;
     }
     to {
-        transform: translate(-50%, -70px);
+        transform: translate(-70px, -60px);
         opacity: 100%;
     }
 }
@@ -311,7 +306,7 @@ button:hover {
         opacity: 0%;
     }
     to {
-        transform: translate(-50%, -15%);
+        transform: translate(-50%, -18%);
         opacity: 100%;
     }
 }
@@ -323,8 +318,6 @@ button:hover {
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
 }
-
-
 
 .big-emoji {
     font-size: 8em;
