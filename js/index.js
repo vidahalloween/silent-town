@@ -36,7 +36,7 @@ const NUMEROLOGO = {
         + "todo lo que ocurre, ha ocurrido y ocurrirá a través de sus cifras."
 };
 
-const EXPERTO_PSICOFONIAS = {
+const PSICOFONISTA = {
     name: "Psicofonista",
     emoji: "🔊",
     description: "Las psicofonías son el registro de las voces que nos llegan desde el más allá. Mediante el estudio "
@@ -78,13 +78,13 @@ const CEROMANTE = {
 };
 
 const ALL_SPECIALTIES = [
-    TAROTISTA, MEDIUM, ASTROLOGO, NUMEROLOGO, EXPERTO_PSICOFONIAS,
+    TAROTISTA, MEDIUM, ASTROLOGO, NUMEROLOGO, PSICOFONISTA,
     TASEOGRAFO,
-    TAROTISTA, MEDIUM, ASTROLOGO, NUMEROLOGO, EXPERTO_PSICOFONIAS,
+    TAROTISTA, MEDIUM, ASTROLOGO, NUMEROLOGO, PSICOFONISTA,
     PAREIDOLOGO,
-    TAROTISTA, MEDIUM, ASTROLOGO, NUMEROLOGO, EXPERTO_PSICOFONIAS,
+    TAROTISTA, MEDIUM, ASTROLOGO, NUMEROLOGO, PSICOFONISTA,
     QUIROMANTE,
-    TAROTISTA, MEDIUM, ASTROLOGO, NUMEROLOGO, EXPERTO_PSICOFONIAS,
+    TAROTISTA, MEDIUM, ASTROLOGO, NUMEROLOGO, PSICOFONISTA,
     CEROMANTE
 ];
 
@@ -109,17 +109,15 @@ const Airtable = require('airtable');
 const base = new Airtable({ apiKey: API_KEY }).base(BASE_ID);
 
 // In memory data
+var userData = {};
 var registeredCharacters = [];
 var updateCharacterTimeout;
-
-// Constants
-const USER_ID_PARAM_ID = 'id';
+var fetchCharacterInfoRetries = 0;
+var previouslyAssignedCharacters = 0;
+var userUpdatedSuccessfully = false;
 
 // Start
-const userId = new URLSearchParams(window.location.search).get(USER_ID_PARAM_ID);
-var previouslyAssignedCharacters = 0;
-var userData;
-var userUpdatedSuccessfully = false;
+const userId = new URLSearchParams(window.location.search).get('id');
 
 if (!userId) {
     // No id - can't grant access
@@ -127,7 +125,7 @@ if (!userId) {
     showIncorrectUrlMessage();
 } else {
     registeredCharacters['num_of_specialists'] = 0;
-    fetchCharacterInfo(userId);
+    fetchCharacterInfo();
 }
 
 function showIncorrectUrlMessage() {
@@ -135,18 +133,20 @@ function showIncorrectUrlMessage() {
     $('.incorrect-url-container').show();
 }
 
-function fetchCharacterInfo(id) {
+function fetchCharacterInfo() {
     base(TABLE_NAME).select({
-        filterByFormula: "{character_id} = '" + id + "'",
+        filterByFormula: "{character_id} = '" + userId + "'",
         view: "Grid view"
     })
     .firstPage()
     .then(records => {
+        console.log("Found " + records.length + " users with character ID " + userId);
+
         if (records.length < 1) {
-            console.warn('User id ' + id + ' not registered. Showing incorrect URL message');
+            console.warn('User id ' + userId + ' not registered. Showing incorrect URL message');
             showIncorrectUrlMessage();
         } else {
-            console.log('User id ' + id + ' correctly fetched.');
+            console.log('User id ' + userId + ' correctly fetched.');
 
             userData = extractUserDataFromRecord(records[0]);
             
@@ -161,6 +161,14 @@ function fetchCharacterInfo(id) {
     })
     .catch(error => {
         console.error(error);
+
+        if (fetchCharacterInfoRetries < 5) {
+            fetchCharacterInfoRetries++;
+            console.info("Retrying to fetch character info. Attempt " + fetchCharacterInfoRetries);
+            fetchCharacterInfo();
+            return;
+        }
+
         showErrorBanner();
     });
 }
@@ -196,7 +204,7 @@ function showCharacterCreationFlow() {
 
     $('.welcome-loading').hide();
     $('.assignation-container').hide();
-    $('.form-container').fadeIn();
+    $('.form-container').fadeIn(500);
 }
 
 function populateCharacterCreationForm() {
@@ -253,12 +261,10 @@ function assignSpecialty() {
             return;
         }
 
-        console.info()
-
         const specialtyIdx = previouslyAssignedCharacters % ALL_SPECIALTIES.length;
         userData[FIELD_SPECIALTY_ID] = ALL_SPECIALTIES[specialtyIdx];
 
-        updateCharacter();
+        updateCharacterSpecialty();
         checkUserUpdatedSuccessfully(6000, showCharacterCreationFlow);
     });
 }
@@ -268,17 +274,18 @@ function onInputValueChanged() {
         clearTimeout(updateCharacterTimeout);
     }
 
-    updateCharacterTimeout = setTimeout(saveCharacterData, 1000);
+    updateCharacterTimeout = setTimeout(saveCharacterData, 3000);
 }
 
 function saveCharacterData() {
+    clearTimeout(updateCharacterTimeout);
+
     updateUserDataFromFormFields();
-    updateCharacter();
+    updateCharacterData();
 }
 
 function checkUserUpdatedSuccessfully(timeout, callback) {
     if (userUpdatedSuccessfully) {
-        userUpdatedSuccessfully = false;
         callback();
         return;
     }
@@ -286,13 +293,37 @@ function checkUserUpdatedSuccessfully(timeout, callback) {
     setTimeout(function() { checkUserUpdatedSuccessfully(timeout, callback) }, timeout);
 }
 
-function updateCharacter() {
+function updateCharacterSpecialty() {
+    const specialtyName = userData[FIELD_SPECIALTY_ID][SPECIALTY_NAME_FIELD_ID];
+    var data = {};
+    data[FIELD_SPECIALTY_ID] = userData[FIELD_SPECIALTY_ID][SPECIALTY_NAME_FIELD_ID];
+
+    console.log("Updating character specialty to " + specialtyName);
+
+    userUpdatedSuccessfully = false;
+    base(TABLE_NAME).update([{
+        "id": userData[FIELD_AIRTABLE_ID],
+        "fields": data
+    }], function(err, records) {
+        if (err) {
+          console.error(err);
+          showErrorBanner();
+          return;
+        }
+
+        userUpdatedSuccessfully = true;
+    });
+}
+
+function updateCharacterData() {
     var airtableData = {};
     Object.assign(airtableData, userData);
-    airtableData[FIELD_SPECIALTY_ID] = userData[FIELD_SPECIALTY_ID][SPECIALTY_NAME_FIELD_ID];
     delete airtableData[FIELD_AIRTABLE_ID];
+    delete airtableData[FIELD_SPECIALTY_ID];
 
     console.log("Updating character with id " + userData[FIELD_AIRTABLE_ID]);
+
+    userUpdatedSuccessfully = false;
     base(TABLE_NAME).update([{
         "id": userData[FIELD_AIRTABLE_ID],
         "fields": airtableData
