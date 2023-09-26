@@ -6,11 +6,13 @@
 body {
     background-image: url("./img/bg-min.png");
     background-repeat: repeat;
+    padding-top:20px;
 }
 
 .error-banner {
     display: none;
     position: fixed;
+    z-index: 200;
     width: 100%;
     padding: 5px 10px;
     font-size: 0.8em;
@@ -20,6 +22,24 @@ body {
     background-color: #ff8787;
     top: 0px;
     left: 0px;
+}
+
+.countdown-banner {
+    position: fixed;
+    z-index: 100;
+    width: 100%;
+    padding: 5px 10px;
+    font-size: 0.8em;
+    text-align: center;
+    color: #be4d02;
+    border-bottom: solid #be4d02 1px;
+    background-color: #f19f0b;
+    top: 0px;
+    left: 0px;
+}
+
+.countdown-banner strong {
+    color: #be4d02;
 }
 
 .info-banner {
@@ -180,6 +200,11 @@ main h1 {
     font-size: 1em;
     color: black;
     background-color: #EEEEEE;
+}
+
+input:disabled, textarea:disabled {
+    color:#555555;
+    background-color: #999999;
 }
 
 .form-container textarea {

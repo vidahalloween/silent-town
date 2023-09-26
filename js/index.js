@@ -111,6 +111,7 @@ const base = new Airtable({ apiKey: API_KEY }).base(BASE_ID);
 // In memory data
 var userData = {};
 var registeredCharacters = [];
+var countdownInterval;
 var updateCharacterTimeout;
 var fetchCharacterInfoRetries = 0;
 var previouslyAssignedCharacters = 0;
@@ -118,6 +119,9 @@ var userUpdatedSuccessfully = false;
 
 // Start
 const userId = new URLSearchParams(window.location.search).get('id');
+const limitTime = new Date("Oct 1, 2023 12:00:00").getTime();
+
+startCountdown();
 
 if (!userId) {
     // No id - can't grant access
@@ -126,6 +130,53 @@ if (!userId) {
 } else {
     registeredCharacters['num_of_specialists'] = 0;
     fetchCharacterInfo();
+}
+
+function startCountdown() {
+    const nowTime = new Date().getTime();
+    const timeLeftMs = limitTime - nowTime;
+
+    if (timeLeftMs <= 0) {
+        countdownDone();
+    } else {
+        updateCountDown();
+        countdownInterval = setInterval(updateCountDown, 1000);
+    }
+}
+
+function updateCountDown() {
+    const nowTime = new Date().getTime();
+    const timeLeftMs = limitTime - nowTime;
+
+    if (timeLeftMs <= 0) {
+        countdownDone();
+        return;
+    }
+
+    const daysLeft = Math.floor(timeLeftMs / (1000 * 60 * 60 * 24));
+    const hoursLeft = Math.floor((timeLeftMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutesLeft = Math.floor((timeLeftMs % (1000 * 60 * 60)) / (1000 * 60));
+    const secondsLeft = Math.floor((timeLeftMs % (1000 * 60)) / 1000);
+
+    const daysLeftStr = (daysLeft <= 9) ? "0" + daysLeft : daysLeft;
+    const hoursLeftStr = (hoursLeft <= 9) ? "0" + hoursLeft : hoursLeft;
+    const minutesLeftStr = (minutesLeft <= 9) ? "0" + minutesLeft : minutesLeft;
+    const secondsLeftStr = (secondsLeft <= 9) ? "0" + secondsLeft : secondsLeft;
+    
+    const timeLeft = `${daysLeftStr}d ${hoursLeftStr}h ${minutesLeftStr}m ${secondsLeftStr}s`;
+    $('.countdown-banner').html("🎃  Quedan <strong>" + timeLeft +"</strong> para completar el personaje  🎃");
+}
+
+function countdownDone() {
+    $('textarea').attr('disabled', true);
+    $('input').attr('disabled', true);
+    $('.countdown-banner').hide();
+    $('.banner-message').html(
+        "El tiempo para completar el personaje se ha acabado. Para cualquier pregunta o modificación, por favor " +
+        "contacta con los game masters."
+    )
+    
+    clearInterval(countdownInterval);
 }
 
 function showIncorrectUrlMessage() {
