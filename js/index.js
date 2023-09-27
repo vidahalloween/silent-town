@@ -164,7 +164,7 @@ function updateCountDown() {
     const secondsLeftStr = (secondsLeft <= 9) ? "0" + secondsLeft : secondsLeft;
     
     const timeLeft = `${daysLeftStr}d ${hoursLeftStr}h ${minutesLeftStr}m ${secondsLeftStr}s`;
-    $('.countdown-banner').html("🎃  Quedan <strong>" + timeLeft +"</strong> para completar el personaje  🎃");
+    $('.countdown-banner').html("🎃 Quedan <strong>" + timeLeft +"</strong> para completar el personaje 🎃");
 }
 
 function countdownDone() {
