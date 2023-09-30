@@ -119,7 +119,7 @@ var userUpdatedSuccessfully = false;
 
 // Start
 const userId = new URLSearchParams(window.location.search).get('id');
-const limitTime = new Date("Oct 1, 2023 12:00:00").getTime();
+const limitTime = new Date("Oct 1, 2023 23:59:59").getTime();
 
 startCountdown();
 
