@@ -6,7 +6,6 @@
 body {
     background-image: url("./img/bg-min.png");
     background-repeat: repeat;
-    padding-top:10px;
 }
 
 .error-banner {
@@ -89,10 +88,6 @@ main h1 {
 }
 
 @media only screen and (max-width: 1200px) {
-    body {
-        padding-top: 30px;
-    }
-
     .title-img {
         max-width: 80%;
     }
