@@ -201,13 +201,15 @@ main h1 {
     background-color: #EEEEEE;
 }
 
-input:disabled, textarea:disabled {
-    color:#555555;
-    background-color: #999999;
-}
-
 .form-container textarea {
     height: 150px;
+}
+
+.form-container input:disabled, textarea:disabled {
+    -webkit-text-fill-color: #555555;
+    color: #555555;
+    background-color: #999999;
+    opacity: 100%;
 }
 
 .buttons-container {
