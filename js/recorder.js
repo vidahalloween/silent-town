@@ -10,7 +10,7 @@ let audioBlob;
 
 function startRecording() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        $('#recording-status').html('Audio recording unsupported!!');
+        $('#recording-status').html('Audio recording unsupported!');
         return;
     }
 
@@ -19,20 +19,21 @@ function startRecording() {
             .then((stream) => {
                 mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.ondataavailable = (event) => {
-                    // if (event.data.size > 0) {
+                    if (event.data.size > 0) {
                         audioChunks.push(event.data);
-                    // }
+                    }
                 };
                 mediaRecorder.onstop = () => {
-                    audioBlob = new Blob(audioChunks, { type: "audio/ogg; codecs=opus" });
+                    console.log("Finished recording");
+                    $('#recording-status').html('Finished recording');
+                    audioBlob = new Blob(audioChunks);
+                    $('#recording-status').html(audioBlob);
                 };
                 mediaRecorder.start();
                 console.log("Recording... (4 seconds)");
                 $('#recording-status').html('Recording... (4 seconds)');
                 setTimeout(() => {
                     mediaRecorder.stop();
-                    console.log("Finished recording");
-                    $('#recording-status').html('Finished recording');
                 }, 4000);
             })
             .catch((error) => {
